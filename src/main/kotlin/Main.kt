@@ -1,4 +1,6 @@
 import java.lang.System.exit
+import utils.readIntNotNull
+import utils.readNextInt
 
 
 fun main() {
@@ -30,11 +32,27 @@ fun mainMenu(): Int {
          > |   4) Delete a note             |
          > ----------------------------------
          > |   0) Exit                      |
-         > ----------------------------------
-         > ==>> """.trimMargin(">"))
-    return readlnOrNull()?.toIntOrNull() ?: -1
+         > ---------------------------------- 
+         >""".trimMargin(">"))
+    return readNextInt(" > ==>>")
 }
 
+fun readNextLine(prompt: String?): String {
+    print(prompt)
+    return readln()
+}
+
+
+fun readNextChar(prompt: String?): Char {
+    do {
+        try {
+            print(prompt)
+            return readln().first()
+        } catch (e: NumberFormatException) {
+            System.err.println("\tEnter a character please.")
+        }
+    } while (true)
+}
 fun addNote(){
     println("You chose Add Note")
 }
