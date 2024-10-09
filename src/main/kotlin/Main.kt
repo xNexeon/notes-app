@@ -1,25 +1,16 @@
-import io.github.oshai.kotlinlogging.KotlinLogging
-import java.lang.System.exit
-import utils.readIntNotNull
-import utils.readNextInt
 
+import controllers.NoteAPI
+import io.github.oshai.kotlinlogging.KotlinLogging
+import models.Note
+import utils.readNextInt
+import utils.readNextLine
+import java.lang.System.exit
 
 private val logger = KotlinLogging.logger {}
+private val noteAPI = NoteAPI()
+
 fun main() {
     runMenu()
-}
-fun runMenu() {
-    do {
-        val option = mainMenu()
-        when (option) {
-            1 -> addNote()
-            2 -> listNotes()
-            3 -> updateNote()
-            4 -> deleteNote()
-            0 -> exitApp()
-            else -> println("Invalid option entered: ${option}")
-        }
-    } while (true)
 }
 
 fun mainMenu(): Int {
@@ -39,39 +30,46 @@ fun mainMenu(): Int {
     return readNextInt(" > ==>>")
 }
 
-fun readNextLine(prompt: String?): String {
-    print(prompt)
-    return readln()
-}
-
-
-fun readNextChar(prompt: String?): Char {
+fun runMenu() {
     do {
-        try {
-            print(prompt)
-            return readln().first()
-        } catch (e: NumberFormatException) {
-            System.err.println("\tEnter a character please.")
+        val option = mainMenu()
+        when (option) {
+            1 -> addNote()
+            2 -> listNotes()
+            3 -> updateNote()
+            4 -> deleteNote()
+            0 -> exitApp()
+            else -> println("Invalid option entered: $option")
         }
     } while (true)
 }
+
 fun addNote(){
-    logger.info { "addNote() function invoked" }
+    val noteTitle = readNextLine("Enter a title for the note: ")
+    val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
+    val noteCategory = readNextLine("Enter a category for the note: ")
+    val isAdded = noteAPI.add(Note(noteTitle, notePriority, noteCategory, false))
+
+    if (isAdded) {
+        println("Added Successfully")
+    } else {
+        println("Add Failed")
+    }
 }
 
 fun listNotes(){
-    logger.info { "listNotes() function invoked" }
+    println(noteAPI.listAllNotes())
 }
 
-fun updateNote(){
+fun updateNote() {
     logger.info { "updateNote() function invoked" }
 }
 
-fun deleteNote(){
+fun deleteNote() {
     logger.info { "deleteNote() function invoked" }
 }
 
-fun exitApp(){
-    logger.info { "ExitNote() function invoked" }
+fun exitApp() {
+    println("Exiting...bye")
     exit(0)
 }
